@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+'use strict';
+
+var lockout = true;
+var asking = false;
+var lockouttime = 200;
+var isanswering = false;
+var buzztime;
+var asked = false;
+var defaultstate = true;
+
+document.addEventListener('keydown', (event) => {
+  const keyName = event.key;
+
+	  if (keyName === 'Control') {
+	    // do not alert when only Control key is pressed.
+	    return;
+	  }
+	
+	  if (keyName === 't') {
+		 // asking = true;
+		  //reset();
+	  }
+	  
+	  if (keyName === 'f'){
+		  if(isanswering){
+			  
+		  }else{
+		  buzzedIn();			  
+		  }
+
+	  }
+
+  }, false);
+  
+
+
+document.addEventListener('keyup', (event) => {
+
+  const keyName = event.key;
+	  if (keyName === 't') {
+		  if(defaultstate == false){
+			  
+		  }else{
+		  defaultstate = false;
+	  		// no longer asking
+	  	  lockout = false;
+		  asking = false;
+		  asked = true;
+		  waitingForBuzz();
+		  //start 3 second answer timer. ( 5 lights at start, 3 after 1 sec, 1 after 2 secs, 0 after 5)			  
+		  }
+
+	  }
+
+}, false);
+
+
+function buzzedIn(){
+	
+	if(lockout){
+		lockhimout();
+	}else if(asking){
+		lockout = true;
+		lockhimout();
+	}else{
+		var newtime = (new Date()).getTime();
+		var differencetime = newtime-buzztime;	
+		$("#message").text("Response time: "+differencetime+" ms");
+		isanswering = true;
+		stopCountdown1();	
+		waitingForAnswer();
+		
+	}
+	
+}
+
+function lockhimout(){
+	$("#message").text("LOCKED OUT");
+	lockouttime = 200;
+	setTimeout(function(){ 
+		if(asked){
+			lockout = true;
+			console.log("www")
+			}else
+			{ lockout = false }
+	}, lockouttime);
+}
+
+function starttimer(){
+	
+ buzztime = (new Date()).getTime();
+
+}
+
+var waiting, waiting2, waiting3;
+
+function waitingForBuzz(){
+	
+	starttimer();
+	
+	$("#s1").css("background","red");
+	$("#s2").css("background","red");
+	$("#s3").css("background","red");
+	$("#s4").css("background","red");
+	$("#s5").css("background","red");				
+	
+	waiting = setTimeout(function(){
+			$("#s1").css("background","#221111");					
+			$("#s5").css("background","#221111");			
+	}, 1000);
+
+
+	waiting2 = setTimeout(function(){
+			$("#s2").css("background","#221111");					
+			$("#s4").css("background","#221111");			
+	}, 2000);
+
+	waiting3 = setTimeout(function(){
+			$("#s3").css("background","#221111");
+			lockout = true;
+			document.getElementById('outoftime').play();
+			reset();						
+									
+	}, 3000);
+}
+
+function stopCountdown1() {
+    clearTimeout(waiting);
+    clearTimeout(waiting2);
+    clearTimeout(waiting3);        
+}
+
+
+var awaiting1, awaiting2, awaiting3, awaiting4, awaiting5;
+
+function waitingForAnswer(){
+	
+	$("#a1").css("background","red");
+	$("#a2").css("background","red");
+	$("#a3").css("background","red");
+	$("#a4").css("background","red");
+	$("#a5").css("background","red");				
+	$("#a6").css("background","red");				
+	$("#a7").css("background","red");				
+	$("#a8").css("background","red");				
+	$("#a9").css("background","red");								
+	
+	awaiting1 = setTimeout(function(){
+			$("#a1").css("background","#221111");					
+			$("#a9").css("background","#221111");			
+	}, 1000);
+
+
+	awaiting2 = setTimeout(function(){
+			$("#a2").css("background","#221111");					
+			$("#a8").css("background","#221111");			
+	}, 2000);
+
+	awaiting3 = setTimeout(function(){
+			$("#a3").css("background","#221111");					
+			$("#a7").css("background","#221111");							
+									
+	}, 3000);
+	
+	awaiting4 = setTimeout(function(){
+			$("#a4").css("background","#221111");					
+			$("#a6").css("background","#221111");							
+									
+	}, 4000);
+	
+	awaiting5 = setTimeout(function(){
+			$("#a5").css("background","#221111");
+			lockout = true;			
+			document.getElementById('outoftime').play();					
+			reset();												
+	}, 5000);		
+}
+
+
+function stopCountdown2() {
+    clearTimeout(awaiting1);
+    clearTimeout(awaiting2);
+    clearTimeout(awaiting3);        
+    clearTimeout(awaiting4);        
+    clearTimeout(awaiting5);                
+}
+
+
+function reset(){
+	stopCountdown2();
+	isanswering = false;
+	asked = false;
+	defaultstate = true;
+	$("#message").text("");
+	$("#s1").css("background","#221111");
+	$("#s2").css("background","#221111");
+	$("#s3").css("background","#221111");
+	$("#s4").css("background","#221111");
+	$("#s5").css("background","#221111");	
+	
+	$("#a1").css("background","#221111");
+	$("#a2").css("background","#221111");
+	$("#a3").css("background","#221111");
+	$("#a4").css("background","#221111");
+	$("#a5").css("background","#221111");	
+	$("#a6").css("background","#221111");
+	$("#a7").css("background","#221111");
+	$("#a8").css("background","#221111");
+	$("#a9").css("background","#221111");
+}
+
+
+</script>
+
+<style>
+body{
+	background-color: #111;
+}
+.wpr
+{
+    width: 400px;
+    height: 100px;
+    background: none;
+    padding: 10px 30px;
+    
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.wpr span
+{
+    width: 50px;
+    height: 50px;
+    background: #221111;
+    float: left;
+    margin: 0 5px;
+    border-radius: 25px;
+}
+
+
+.wpr2
+{
+    width: 400px;
+    height: 30px;
+    background: grey;
+    padding: 3px 5px;
+    
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.wpr2 span
+{
+    width: 50px;
+    height: 20px;
+    background: #221111;
+    float: left;
+    margin: 0 5px;
+}
+</style>
+
+</head>
+
+<body>
+	<h3 style="text-align: center; font-family: sans-serif; color: white;">Jeopardy buzzer simulator</h3>
+	<h3 style="text-align: center; font-family: sans-serif; color: white;">Buzz in only when these are red</h3>
+<div class="wpr">
+    <span id="s1"></span>
+    <span id="s2"></span>
+    <span id="s3"></span>
+    <span id="s4"></span>
+    <span id="s5"></span>
+</div>
+
+<div id="spacer" style="height: 220px;"><p id="message" style="text-align: center; font-family: sans-serif; color: white;"></p></div>
+	<h3 style="text-align: center; font-family: sans-serif; color: white;">Time left to answer after buzzing in</h3>
+<div class="wpr2">
+    <span id="a1"></span>
+    <span id="a2"></span>
+    <span id="a3"></span>
+    <span id="a4"></span>
+    <span id="a5"></span>
+    <span id="a6"></span>
+    <span id="a7"></span>
+    <span id="a8"></span>
+    <span id="a9"></span>
+</div>
+
+
+<audio id="outoftime">
+	<source src="times-up.mp3"></source>
+</audio>
+	
+</body>
+</html>
